@@ -206,7 +206,7 @@ if (params.key && params.cover
 
                  map.addSource('mapillary', mapillarySource)
                  map.addLayer({
-                     'id': 'mapillary', 
+                     'id': 'mapillary',
                      'type': 'line',
                      'source': 'mapillary',
                      'source-layer': 'mapillary-sequences',
