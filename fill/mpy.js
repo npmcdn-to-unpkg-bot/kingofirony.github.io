@@ -82,11 +82,6 @@ if (params.key && params.cover
     'c2tuaFJiMHdTN3dleXRrWF9KMExYZzpjZmJmZTY5ZjExYTg5OWY5',
      key, options);
 
-var nodeChangedFunction;
-  mly.on('nodechanged', function (node) {
-    nodeChangedFunction(node);
-  });
-
 
   if(mapType == NO_MAP) {
     document.getElementById("map").style.width = "0%";
