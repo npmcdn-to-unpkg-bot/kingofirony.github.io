@@ -84,7 +84,7 @@ if (params.key && params.cover
 
 var nodeChangedFunction;
   mly.on('nodechanged', function (node) {
-    nodeChangedFunction();
+    //nodeChangedFunction();
   });
 
 
