@@ -210,7 +210,7 @@ if (params.key && params.cover
                      'type': 'line',
                      'source': 'mapillary',
                      'source-layer': 'mapillary-sequences',
-                     'layout': {
+                     'layout': { 
                          'line-cap': 'round',
                          'line-join': 'round'
                      },
