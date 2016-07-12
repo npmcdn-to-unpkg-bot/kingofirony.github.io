@@ -91,156 +91,161 @@ var nodeChangedFunction;
   if(mapType == NO_MAP) {
     document.getElementById("map").style.width = "0%";
     document.getElementsByClassName("mapillary-js")[0].style.width = "100%";
+  } else if(mapType == MAPZEN_MAP ||  ) {
+    renderMapzenMap();
+  } else if (mapType == LEAFLET_MAP) {
+    renderLeafletMap();
+  } else {
+
   }
 
 
-          // var map = L.map('map').setView([0, 0], 10)
-          //
-          //              var osmUrl='http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
-          //          var osmAttrib='Map data © <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'
-          //          var osm = new L.TileLayer(osmUrl, { maxZoom: 18, attribution: osmAttrib})
-          //              map.addLayer(osm)
-          //
-          //
-          //              var mlyVectorLayerConfig = {
-          //                  url: 'https://d2munx5tg0hw47.cloudfront.net/tiles/{z}/{x}/{y}.mapbox',
-          //                  maxZoom: 18,
-          //                  style: function (feature) {
-          //                      var style = {}
-          //                      style.color = 'rgba(0, 255, 0, 0.7)'
-          //                      style.size = 3
-          //
-          //                      return style
-          //                  }
-          //              }
-          //
-          //          var mvtSource = new L.TileLayer.MVTSource(mlyVectorLayerConfig)
-          //              map.addLayer(mvtSource)
-          //
-          //              var marker
-          //
-          //          var latLon = [48.917849435781356, 2.3513791020523804]
-          //          map.setView(latLon, 15)
-          //              marker = L.marker({
-          //                  lat: latLon[0],
-          //                  lon: latLon[1]
-          //              })
-          //              marker.addTo(map)
-          //
-          //                                     mly.on('nodechanged', function (node) {
-          //                                         var latLon = [node.latLon.lat, node.latLon.lon]
-          //                                         map.setView(latLon, 15)
-          //
-          //                                             if (!marker) {
-          //                                                 marker = L.marker(node.latLon).addTo(map)
-          //                                             } else {
-          //                                                 marker.setLatLng(node.latLon)
-          //                                             }
-          //                                     })
+function renderMapzenMap() {
+   var layer = Tangram.leafletLayer({
+       scene: 'scene.yaml',
+       attribution: '<a href="https://mapzen.com/tangram" target="_blank">Tangram</a> | &copy; OSM contributors | <a href="https://mapzen.com/" target="_blank">Mapzen</a>'
+   })
+
+       layer.addTo(map)
+
+       var mlyVectorLayerConfig = {
+           url: 'https://d2munx5tg0hw47.cloudfront.net/tiles/{z}/{x}/{y}.mapbox',
+           maxZoom: 18,
+           style: function (feature) {
+               var style = {}
+               style.color = 'rgba(255, 0, 0, 0.7)'
+               style.size = 3
+
+               return style
+           }
+       }
+
+   var mvtSource = new L.TileLayer.MVTSource(mlyVectorLayerConfig)
+       map.addLayer(mvtSource)
+
+       var marker
+
+   var latLon = [48.917849435781356, 2.3513791020523804]
+   map.setView(latLon, 15)
+       marker = L.marker({
+           lat: latLon[0],
+           lon: latLon[1]
+       })
+       marker.addTo(map)
+}
+
+function renderLeafletMap() {
+   var map = L.map('map').setView([0, 0], 10)
+
+               var osmUrl='http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
+           var osmAttrib='Map data © <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'
+           var osm = new L.TileLayer(osmUrl, { maxZoom: 18, attribution: osmAttrib})
+               map.addLayer(osm)
 
 
-          ///TANGRAM
-         //
-        //   var map = L.map('map')
-        //  var layer = Tangram.leafletLayer({
-        //      scene: 'scene.yaml',
-        //      attribution: '<a href="https://mapzen.com/tangram" target="_blank">Tangram</a> | &copy; OSM contributors | <a href="https://mapzen.com/" target="_blank">Mapzen</a>'
-        //  })
-         //
-        //      layer.addTo(map)
-         //
-        //      var mlyVectorLayerConfig = {
-        //          url: 'https://d2munx5tg0hw47.cloudfront.net/tiles/{z}/{x}/{y}.mapbox',
-        //          maxZoom: 18,
-        //          style: function (feature) {
-        //              var style = {}
-        //              style.color = 'rgba(255, 0, 0, 0.7)'
-        //              style.size = 3
-         //
-        //              return style
-        //          }
-        //      }
-         //
-        //  var mvtSource = new L.TileLayer.MVTSource(mlyVectorLayerConfig)
-        //      map.addLayer(mvtSource)
-         //
-        //      var marker
-         //
-        //  var latLon = [48.917849435781356, 2.3513791020523804]
-        //  map.setView(latLon, 15)
-        //      marker = L.marker({
-        //          lat: latLon[0],
-        //          lon: latLon[1]
-        //      })
-        //      marker.addTo(map)
+               var mlyVectorLayerConfig = {
+                   url: 'https://d2munx5tg0hw47.cloudfront.net/tiles/{z}/{x}/{y}.mapbox',
+                   maxZoom: 18,
+                   style: function (feature) {
+                       var style = {}
+                       style.color = 'rgba(0, 255, 0, 0.7)'
+                       style.size = 3
 
+                       return style
+                   }
+               }
 
+           var mvtSource = new L.TileLayer.MVTSource(mlyVectorLayerConfig)
+               map.addLayer(mvtSource)
 
-        //Mapbox gl
-        mapboxgl.accessToken = 'pk.eyJ1IjoibWFwaWxsYXJ5IiwiYSI6ImNpanB0NmN1bDAwOTF2dG03enM3ZHRocDcifQ.Z6wgtnyRBO0TuY3Ak1tVLQ';
-         var map = new mapboxgl.Map({
-             container: 'map', // container id
-             style: 'mapbox://styles/mapbox/streets-v8', //stylesheet location
-             center: [2.3513791020523804, 48.917849435781356], // starting position
-             zoom: 12 // starting zoom
-         })
+               var marker
 
-             var markerSource = {
-                 type: 'geojson',
-                 data: {
-                     type: 'Feature',
-                     geometry: {
-                         type: 'Point',
-                         coordinates: [2.3513791020523804, 48.917849435781356]
-                     },
-                     properties: {
-                         title: 'You\'re here!',
-                         'marker-symbol': 'marker'
-                     }
-                 }
-             }
+           var latLon = [48.917849435781356, 2.3513791020523804]
+           map.setView(latLon, 15)
+               marker = L.marker({
+                   lat: latLon[0],
+                   lon: latLon[1]
+               })
+               marker.addTo(map)
 
-         var mapillarySource = {
-             type: 'vector',
-             tiles: ['https://d2munx5tg0hw47.cloudfront.net/tiles/{z}/{x}/{y}.mapbox'],
-             minzoom: 0,
-             maxzoom: 16
-         }
+                                      mly.on('nodechanged', function (node) {
+                                          var latLon = [node.latLon.lat, node.latLon.lon]
+                                          map.setView(latLon, 15)
 
-         map.on('style.load', function () {
-             map.addSource('markers', markerSource)
+                                              if (!marker) {
+                                                  marker = L.marker(node.latLon).addTo(map)
+                                              } else {
+                                                  marker.setLatLng(node.latLon)
+                                              }
+                                      })
+}
 
-                 map.addLayer({
-                     id: 'markers',
-                     type: 'symbol',
-                     source: 'markers',
-                     layout: {
-                         'icon-image': '{marker-symbol}-15',
-                         'text-field': '{title}',
-                         'text-font': ['Open Sans Semibold', 'Arial Unicode MS Bold'],
-                         'text-offset': [0, 0.6],
-                         'text-anchor': 'top'
-                     },
-                     paint: {
-                         'text-size': 12
-                     }
-                 })
+function renderMapboxMap() {
+  mapboxgl.accessToken = 'pk.eyJ1IjoibWFwaWxsYXJ5IiwiYSI6ImNpanB0NmN1bDAwOTF2dG03enM3ZHRocDcifQ.Z6wgtnyRBO0TuY3Ak1tVLQ';
+  var map = new mapboxgl.Map({
+      container: 'map', // container id
+      style: 'mapbox://styles/mapbox/streets-v8', //stylesheet location
+      center: [2.3513791020523804, 48.917849435781356], // starting position
+      zoom: 12 // starting zoom
+  })
 
-                 map.addSource('mapillary', mapillarySource)
-                 map.addLayer({
-                     'id': 'mapillary',
-                     'type': 'line',
-                     'source': 'mapillary',
-                     'source-layer': 'mapillary-sequences',
-                     'layout': {
-                         'line-cap': 'round',
-                         'line-join': 'round'
-                     },
-                     'paint': {
-                         'line-opacity': 0.6,
-                         'line-color': 'rgb(53, 175, 109)',
-                         'line-width':   2
-                     }
-                 }, 'markers')
+      var markerSource = {
+          type: 'geojson',
+          data: {
+              type: 'Feature',
+              geometry: {
+                  type: 'Point',
+                  coordinates: [2.3513791020523804, 48.917849435781356]
+              },
+              properties: {
+                  title: 'You\'re here!',
+                  'marker-symbol': 'marker'
+              }
+          }
+      }
 
-         })
+  var mapillarySource = {
+      type: 'vector',
+      tiles: ['https://d2munx5tg0hw47.cloudfront.net/tiles/{z}/{x}/{y}.mapbox'],
+      minzoom: 0,
+      maxzoom: 16
+  }
+
+  map.on('style.load', function () {
+      map.addSource('markers', markerSource)
+
+          map.addLayer({
+              id: 'markers',
+              type: 'symbol',
+              source: 'markers',
+              layout: {
+                  'icon-image': '{marker-symbol}-15',
+                  'text-field': '{title}',
+                  'text-font': ['Open Sans Semibold', 'Arial Unicode MS Bold'],
+                  'text-offset': [0, 0.6],
+                  'text-anchor': 'top'
+              },
+              paint: {
+                  'text-size': 12
+              }
+          })
+
+          map.addSource('mapillary', mapillarySource)
+          map.addLayer({
+              'id': 'mapillary',
+              'type': 'line',
+              'source': 'mapillary',
+              'source-layer': 'mapillary-sequences',
+              'layout': {
+                  'line-cap': 'round',
+                  'line-join': 'round'
+              },
+              'paint': {
+                  'line-opacity': 0.6,
+                  'line-color': 'rgb(53, 175, 109)',
+                  'line-width':   2
+              }
+          }, 'markers')
+
+  })
+}
