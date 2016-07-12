@@ -1,3 +1,8 @@
+var NO_MAP = 0;
+var MAPZEN_MAP = 1;
+var MAPBOX_MAP = 2;
+var LEAFLET_MAP= 3;
+
 function getSearchParameters() {
   var prmstr = window.location.search.substr(1);
   return prmstr != null && prmstr != "" ? transformToAssocArray(prmstr) : {};
@@ -21,16 +26,19 @@ var direction;
 var sequence;
 var imgSize;
 var renderMode;
+var mapType;
 
 if (params.key && params.cover
    && params.attribution && params.direction
     && params.sequence && params.imgSize
-    && params.renderMode) {
+    && params.renderMode && params.mapType) {
   key = params.key;
+  mapType = params.mapType;
   attribution = params.attribution == "true" ? true : false;
   cover = params.cover == "true" ? true : false;
   direction = params.direction == "true" ? true : false;
   sequence = params.sequence == "true" ? true : false;
+
   switch(params.imgSize) {
     case 320:
     imgSize = Mapillary.ImageSize.Size320;
@@ -47,6 +55,7 @@ if (params.key && params.cover
     default:
     imgSize = Mapillary.ImageSize.Size2048;
   }
+
   switch(params.renderMode) {
     case 1:
     renderMode = Mapillary.RenderMode.Fill
@@ -68,11 +77,22 @@ if (params.key && params.cover
     "renderMode": renderMode,
   };
 
+  var mly = new Mapillary.Viewer(
+    'mly',
+    'cjJ1SUtVOEMtdy11b21JM0tyYTZIQTo2ZmVjNTQ3YWQ0OWI2Yjgx',
+     key, options);
 
-        var mly = new Mapillary.Viewer(
-          'mly',
-          'cjJ1SUtVOEMtdy11b21JM0tyYTZIQTo2ZmVjNTQ3YWQ0OWI2Yjgx',
-          key, options);
+var nodeChangedFunction;
+  mly.on('nodechanged', function (node) {
+    nodeChangedFunction();
+  }
+
+
+  if(mapType == NO_MAP) {
+    ("#map").css("width","0%");
+    (".mapillary-js").css("width","0%");
+  }
+
 
           // var map = L.map('map').setView([0, 0], 10)
           //
@@ -155,6 +175,8 @@ if (params.key && params.cover
         //      marker.addTo(map)
 
 
+
+        //Mapbox gl
         mapboxgl.accessToken = 'pk.eyJ1IjoibWFwaWxsYXJ5IiwiYSI6ImNpanB0NmN1bDAwOTF2dG03enM3ZHRocDcifQ.Z6wgtnyRBO0TuY3Ak1tVLQ';
          var map = new mapboxgl.Map({
              container: 'map', // container id
@@ -210,13 +232,13 @@ if (params.key && params.cover
                      'type': 'line',
                      'source': 'mapillary',
                      'source-layer': 'mapillary-sequences',
-                     'layout': { 
+                     'layout': {
                          'line-cap': 'round',
                          'line-join': 'round'
                      },
                      'paint': {
                          'line-opacity': 0.6,
-                         'line-color':   'rgb(53, 175, 109)',
+                         'line-color': 'rgb(53, 175, 109)',
                          'line-width':   2
                      }
                  }, 'markers')
