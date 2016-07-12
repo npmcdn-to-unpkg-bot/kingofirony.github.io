@@ -79,7 +79,7 @@ if (params.key && params.cover
 
   var mly = new Mapillary.Viewer(
     'mly',
-    'cjJ1SUtVOEMtdy11b21JM0tyYTZIQTo2ZmVjNTQ3YWQ0OWI2Yjgx',
+    'c2tuaFJiMHdTN3dleXRrWF9KMExYZzpjZmJmZTY5ZjExYTg5OWY5',
      key, options);
 
 var nodeChangedFunction;
