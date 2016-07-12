@@ -207,7 +207,7 @@ function renderMapboxMap() {
                   coordinates: [2.3513791020523804, 48.917849435781356]
               },
               properties: {
-                  title: 'You\'re here!',
+                  title: '',
                   'marker-symbol': 'marker'
               }
           }
