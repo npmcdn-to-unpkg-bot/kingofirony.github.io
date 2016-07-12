@@ -84,7 +84,7 @@ if (params.key && params.cover
 
 var nodeChangedFunction;
   mly.on('nodechanged', function (node) {
-    //nodeChangedFunction();
+    nodeChangedFunction(node);
   });
 
 
@@ -133,6 +133,17 @@ function renderMapzenMap() {
            lon: latLon[1]
        })
        marker.addTo(map)
+
+       mly.on('nodechanged', function (node) {
+             var latLon = [node.latLon.lat, node.latLon.lon]
+             map.setView(latLon, 15)
+
+             if (!marker) {
+                 marker = L.marker(node.latLon).addTo(map)
+             } else {
+                 marker.setLatLng(node.latLon)
+             }
+         });
 }
 
 function renderLeafletMap() {
@@ -169,16 +180,18 @@ function renderLeafletMap() {
                })
                marker.addTo(map)
 
-                                      mly.on('nodechanged', function (node) {
-                                          var latLon = [node.latLon.lat, node.latLon.lon]
-                                          map.setView(latLon, 15)
 
-                                              if (!marker) {
-                                                  marker = L.marker(node.latLon).addTo(map)
-                                              } else {
-                                                  marker.setLatLng(node.latLon)
-                                              }
-                                      })
+             mly.on('nodechanged', function (node) {
+                 var latLon = [node.latLon.lat, node.latLon.lon]
+                 map.setView(latLon, 15)
+
+                     if (!marker) {
+                         marker = L.marker(node.latLon).addTo(map)
+                     } else {
+                         marker.setLatLng(node.latLon)
+                     }
+             })
+
 }
 
 function renderMapboxMap() {
@@ -249,4 +262,23 @@ function renderMapboxMap() {
           }, 'markers')
 
   })
+
+  mly.on('nodechanged', function (node) {
+               var lnglat = [node.latLon.lon, node.latLon.lat]
+               var tempSource = new mapboxgl.GeoJSONSource({
+                   data: {
+                       type: 'Feature',
+                       geometry: {
+                           type: 'Point',
+                           coordinates: lnglat
+                       },
+                       properties: {
+                           title: 'You\'re here!',
+                           'marker-symbol': 'marker'
+                       }
+                   }
+               })
+                   map.getSource('markers').setData(tempSource._data)
+                   map.flyTo({center: lnglat, zoom: 15})
+           })
 }
