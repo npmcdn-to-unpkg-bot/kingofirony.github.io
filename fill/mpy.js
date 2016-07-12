@@ -91,12 +91,12 @@ var nodeChangedFunction;
   if(mapType == NO_MAP) {
     document.getElementById("map").style.width = "0%";
     document.getElementsByClassName("mapillary-js")[0].style.width = "100%";
-  } else if(mapType == MAPZEN_MAP ||  ) {
+  } else if(mapType == MAPZEN_MAP) {
     renderMapzenMap();
   } else if (mapType == LEAFLET_MAP) {
     renderLeafletMap();
   } else {
-
+    renderMapboxMap();
   }
 
 
