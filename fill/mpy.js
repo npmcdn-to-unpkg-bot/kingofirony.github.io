@@ -89,8 +89,8 @@ var nodeChangedFunction;
 
 
   if(mapType == NO_MAP) {
-    ("#map").css("width","0%");
-    (".mapillary-js").css("width","0%");
+    document.getElementsById(map).style.width = "100%";
+    document.getElementsByClassName("mapillary-js")[0].style.width = "100%";
   }
 
 
