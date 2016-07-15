@@ -20,6 +20,7 @@ function transformToAssocArray( prmstr ) {
 
 var params = getSearchParameters();
 var key = 'NwHRc_WkIkPHbCAJohIlZA';
+var clientId;
 var attribution;
 var cover;
 var direction;
@@ -31,13 +32,14 @@ var mapType;
 if (params.key && params.cover
    && params.attribution && params.direction
     && params.sequence && params.imgSize
-    && params.renderMode && params.mapType) {
+    && params.renderMode && params.mapType && params.clientId) {
   key = params.key;
   mapType = params.mapType;
   attribution = params.attribution == "true" ? true : false;
   cover = params.cover == "true" ? true : false;
   direction = params.direction == "true" ? true : false;
   sequence = params.sequence == "true" ? true : false;
+  clientId = params.clientId;
 
   switch(params.imgSize) {
     case 320:
@@ -79,7 +81,7 @@ if (params.key && params.cover
 
   var mly = new Mapillary.Viewer(
     'mly',
-    'c2tuaFJiMHdTN3dleXRrWF9KMExYZzpjZmJmZTY5ZjExYTg5OWY5',
+    clientId,
      key, options);
 
 
