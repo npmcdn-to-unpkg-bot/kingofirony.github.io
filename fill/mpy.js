@@ -68,6 +68,7 @@ if (params.key && params.cover &&
         default:
             renderMode = Mapillary.RenderMode.Fill;
     }
+    getLatLonForImage(key);
 }
 
 var options = {
@@ -85,19 +86,29 @@ var mly = new Mapillary.Viewer(
     key, options);
 
 
-if (mapType == NO_MAP) {
-    document.getElementById("map").style.width = "0%";
-    document.getElementsByClassName("mapillary-js")[0].style.width = "100%";
-} else if (mapType == MAPZEN_MAP) {
-    renderMapzenMap();
-} else if (mapType == LEAFLET_MAP) {
-    renderLeafletMap();
-} else {
-    renderMapboxMap();
+function getLatLonForImage(key) {
+    var pathAppend = '/v2/im/' + key + '?client_id=' + clientId;
+    var host =  'https://a.mapillary.com';
+    $.ajax({
+        url: host + pathAppend,
+        type: 'GET',
+        dataType: 'json'
+    }).success(function(data) {
+        if (mapType == NO_MAP) {
+            document.getElementById("map").style.width = "0%";
+            document.getElementsByClassName("mapillary-js")[0].style.width = "100%";
+        } else if (mapType == MAPZEN_MAP) {
+            renderMapzenMap(data.lat, data.lon);
+        } else if (mapType == LEAFLET_MAP) {
+            renderLeafletMap(data.lat, data.lon);
+        } else {
+            renderMapboxMap(data.lat, data.lon);
+        }
+    });
 }
 
 
-function renderMapzenMap() {
+function renderMapzenMap(latitude, longitude) {
     var map = L.map('map')
     var layer = Tangram.leafletLayer({
         scene: 'scene.yaml',
@@ -123,11 +134,11 @@ function renderMapzenMap() {
 
     var marker
 
-    var latLon = [48.917849435781356, 2.3513791020523804]
+    var latLon = [latitude, longitude];
     map.setView(latLon, 15)
     marker = L.marker({
-        lat: latLon[0],
-        lon: latLon[1]
+        lat: latitude,
+        lon: longitude
     })
     marker.addTo(map)
 
@@ -143,8 +154,8 @@ function renderMapzenMap() {
     });
 }
 
-function renderLeafletMap() {
-    var map = L.map('map').setView([0, 0], 10)
+function renderLeafletMap(latitude, longitude) {
+    var map = L.map('map').setView([latitude, longitude], 10)
 
     var osmUrl = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
     var osmAttrib = 'Map data © <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'
@@ -172,11 +183,11 @@ function renderLeafletMap() {
 
     var marker
 
-    var latLon = [48.917849435781356, 2.3513791020523804]
+    var latLon = [latitude, longitude]
     map.setView(latLon, 15)
     marker = L.marker({
-        lat: latLon[0],
-        lon: latLon[1]
+        lat: latitude,
+        lon: longitude
     })
     marker.addTo(map)
 
@@ -194,12 +205,12 @@ function renderLeafletMap() {
 
 }
 
-function renderMapboxMap() {
+function renderMapboxMap(latitude, longitude) {
     mapboxgl.accessToken = 'pk.eyJ1IjoibWFwaWxsYXJ5IiwiYSI6ImNpanB0NmN1bDAwOTF2dG03enM3ZHRocDcifQ.Z6wgtnyRBO0TuY3Ak1tVLQ';
     var map = new mapboxgl.Map({
         container: 'map', // container id
         style: 'mapbox://styles/mapbox/streets-v8', //stylesheet location
-        center: [2.3513791020523804, 48.917849435781356], // starting position
+        center: [longitude, latitude], // starting position
         zoom: 12 // starting zoom
     })
 
@@ -209,7 +220,7 @@ function renderMapboxMap() {
             type: 'Feature',
             geometry: {
                 type: 'Point',
-                coordinates: [2.3513791020523804, 48.917849435781356]
+                coordinates: [longitude, latitude]
             },
             properties: {
                 title: '',
