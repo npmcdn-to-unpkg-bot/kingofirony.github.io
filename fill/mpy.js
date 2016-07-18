@@ -92,6 +92,7 @@ function getLatLonForImage(key) {
     $.ajax({
         url: host + pathAppend,
         type: 'GET',
+        crossDomain: true,
         dataType: 'json'
     }).success(function(data) {
         if (mapType == NO_MAP) {
